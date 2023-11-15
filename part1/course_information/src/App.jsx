@@ -1,21 +1,24 @@
 /* eslint-disable react/prop-types */
 const App = () => {
 
-  const course = 'Half Stack application development'
-  const parts = [
-    {
-      name: 'Fundamentals of React',
-      exercises: 10
-    },
-    {
-      name: 'Using props to pass data',
-      exercises: 7
-    },
-    {
-      name: 'State of a component',
-      exercises: 14
-    }
-  ]
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
+
 
   const Header = (props) => ( <div> <h1>{props.crs}</h1> </div> )
 
@@ -37,9 +40,9 @@ const App = () => {
 
   return (
     <div>
-      <Header crs={course} />
-      <Content pts={parts} />
-      <Total pts={parts} />
+      <Header crs={course.name} />
+      <Content pts={course.parts} />
+      <Total pts={course.parts} />
 
     </div>
   )
