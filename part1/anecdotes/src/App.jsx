@@ -14,11 +14,21 @@ const App = () => {
    
   const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
   const [selected, setSelected] = useState(0)
+  const [bestVoteIndex, setBestVoteIndex] = useState(0)
 
   const UpdatePoints = (selected) => {
     let copy = [...points];
     copy[selected]++;
     setPoints(copy);    
+    const bestVote = Math.max(...points)
+    points.forEach((point,i)=>{
+      console.log(i, ": ", point, " best vote: ", bestVote)
+      if(point === bestVote){
+        console.log("new vote found at position ", i )
+        setBestVoteIndex(i)
+      }
+    })
+    console.log(bestVoteIndex)
   }
 
   const randomNum = () => {
@@ -31,6 +41,10 @@ const App = () => {
       <p>has {points[selected]} votes</p>
       <button onClick={()=>UpdatePoints(selected)}>Vote</button>
       <button onClick={()=>setSelected(randomNum)}>Next Anecdote</button>
+
+      <p>Anecdote of the most vote</p>
+      <span>{anecdotes[bestVoteIndex]}</span><br/>
+      <span>has {points[bestVoteIndex]} votes</span>
     </div>
   )
 }
