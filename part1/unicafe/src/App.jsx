@@ -3,16 +3,18 @@ import { useState } from 'react'
 
 const Stats = (props) => (
   <>
+  <StatsLine txt={"good: "} calc= {props.good}/>
+  <StatsLine txt={"neutral: "} calc= {props.neutral}/>
+  <StatsLine txt={"bad: "} calc= {props.bad}/>
   <StatsLine txt={"total: "} calc= {props.good + props.neutral + props.bad}/>
   <StatsLine txt={"average: "} calc= {(props.good*1 + props.neutral*0 + props.bad*-1)/(props.good+props.neutral+props.bad)}/>
   <StatsLine txt={"postive: "} calc= {(props.good)/(props.good+props.neutral+props.bad)*100 +"%"}/>
-    <span>average- {(props.good*1 + props.neutral*0 + props.bad*-1)/(props.good+props.neutral+props.bad)}</span><br/>
   </>
 )
 
 const StatsLine = (props) => (
   <div>
-    <span>{props.txt}: {props.calc}</span>
+    <span>{props.txt} {props.calc}</span>
   </div>
 )
 
