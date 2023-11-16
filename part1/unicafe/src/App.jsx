@@ -1,10 +1,20 @@
+/* eslint-disable react/prop-types */
+
 import { useState } from 'react'
 
+const Stats = (props) => (
+  <>
+    <span>total- {props.good + props.neutral + props.bad}</span><br/>
+    <span>average- {(props.good*1 + props.neutral*0 + props.bad*-1)/(props.good+props.neutral+props.bad)}</span><br/>
+    <span>positive- {(props.good)/(props.good+props.neutral+props.bad)*100}%</span><br/>
+  </>
+)
+
 const App = () => {
-  // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+
 
   return (
     <div>
@@ -13,12 +23,8 @@ const App = () => {
       <button onClick={()=>setNeutral(neutral+1)}>NEUTRAL</button>
       <button onClick={()=>setBad(bad+1)}>BAD</button>
       <h2>Stats</h2>
-      <span>good- {good}</span><br/>
-      <span>neutral- {neutral}</span><br/>
-      <span>bad- {bad}</span><br/>
-      <span>total- {good + neutral + bad}</span><br/>
-      <span>average- {(good*1 + neutral*0 + bad*-1)/(good+neutral+bad)}</span><br/>
-      <span>positive- {(good)/(good+neutral+bad)*100}%</span><br/>
+      <Stats good={good} neutral={neutral} bad={bad}/>
+      
     </div>
   )
 }
