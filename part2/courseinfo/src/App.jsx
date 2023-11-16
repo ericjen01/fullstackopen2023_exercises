@@ -1,4 +1,29 @@
 /* eslint-disable react/prop-types */
+
+
+const Course = ({course}) => {
+  return (
+    <div>
+      <h1>{course.name}</h1>
+      {course.parts.map(part =>{
+        return (
+        <p key={part.id}>{part.name} {part.exercises}</p>
+        )
+      })}
+      <h3>total {summation(course)} exercises</h3>
+    </div>
+  ) 
+}
+
+const summation = (course) => {
+  let sum = 0
+  course.parts.map(part => {
+    sum += part.exercises 
+  })
+  return sum
+}
+
+
 const App = () => {
 
   const course = {
@@ -19,22 +44,15 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
 
-  const Course = ({course}) =>{
-    return (
-      <div>
-        <h1>{course.name}</h1>
-        {course.parts.map(part =>{
-          return (
-          <p key={part.id}>{part.name} {part.exercises}</p>
-          )
-        })}
-      </div>
-    ) 
-  }
   return <Course course={course} />
 }
 export default App
