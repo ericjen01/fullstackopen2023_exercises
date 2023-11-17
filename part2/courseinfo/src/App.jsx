@@ -15,6 +15,7 @@ const Course = ({course}) => {
   ) 
 }
 
+/*
 const summation = (course) => {
   let sum = 0
   course.parts.map(part => {
@@ -22,7 +23,11 @@ const summation = (course) => {
   })
   return sum
 }
+*/
 
+const summation = (course) => ( 
+  course.parts.reduce((accumulator, currentValue) => accumulator + currentValue.exercises, 0)
+)
 
 const App = () => {
 
