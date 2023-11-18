@@ -1,31 +1,27 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
+import Person from './components/Person'
 
-const Person = ({person, key}) =>{
-  return(
-    <li key={key}>{person.name}</li>
-  )
-}
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
+
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]) 
+
   const [newName, setNewName] = useState('')
+
+  const duplicateName = persons.find(p => p.name === newName)
 
   const submitAddition = (e) =>{
     e.preventDefault();
+
     const person = {name:newName}
-    console.log(person)
-    setPersons(persons.concat(person))
-    console.log(persons)
+    
+    duplicateName ? alert(`${newName} is already added to phonebook`) 
+    : setPersons(persons.concat(person))
+      
   }
 
-  const handlePersonChange = (e) =>{
-    e.preventDefault();
-    console.log(e.target.value)
-    setNewName(e.target.value)
-  }
+  const handlePersonChange = (e) => setNewName(e.target.value)
 
   return (
     <div>
