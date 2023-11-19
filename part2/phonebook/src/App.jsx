@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
+import personsService from './services/persons'
 import Persons from './components/Persons'
 import Alert from './components/Alert'
 import Search from './components/Search'
@@ -7,12 +8,7 @@ import FormAddPerson from './components/FormAddPerson'
 
 const App = () => {
 
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }  
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [message, setMessage] = useState('')
@@ -22,12 +18,28 @@ const App = () => {
     ? persons.filter(p => p.name.search(new RegExp(searchTerm, 'ig')) >= 0 ) 
     : persons
 
+  useEffect(()=>{
+    const effectHook= () =>{
+      personsService
+      .getPersons()
+      .then(response=>{
+        console.log(response)
+        setPersons(response)
+      })
+    }
+    effectHook()
+  },[])
+
   const submitAddition = (e) =>{
     e.preventDefault();
 
     const newPersonToAdd = {name:newName, number:newNumber}
     const duplicateName = persons.find(p => p.name === newName)
-    
+    const printSomething = () => {
+      console.log("persons: ", persons)
+    }
+    printSomething()
+
     duplicateName 
     ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
     : setPersons(persons.concat(newPersonToAdd))
