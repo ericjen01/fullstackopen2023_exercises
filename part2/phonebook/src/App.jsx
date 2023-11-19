@@ -1,11 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
 import Persons from './components/Persons'
-
-
-const Alert = ({message}) =>(
-  message===null? (null) :  (<h4>{message}</h4>) 
-)
+import Alert from './components/Alert'
+import Search from './components/Search'
+import FormAddPerson from './components/FormAddPerson'
 
 const App = () => {
 
@@ -27,11 +25,11 @@ const App = () => {
   const submitAddition = (e) =>{
     e.preventDefault();
 
-    const newPersonToAdd = {name:newName, phone:newNumber}
+    const newPersonToAdd = {name:newName, number:newNumber}
     const duplicateName = persons.find(p => p.name === newName)
-
+    
     duplicateName 
-    ? setMessage(`" ${newName} " is already added to phonebook`)
+    ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
     : setPersons(persons.concat(newPersonToAdd))
 
     setTimeout(() => { setMessage(null) }, 4000)
@@ -45,26 +43,22 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
       <Alert message={message}>test</Alert>
-      <div>
-        filter name: <input value={searchTerm} onChange={manageSearchChange}/>
-      </div>
+
+      <Search manageSearchChange={(e) => manageSearchChange(e) }/>
+
       <h3>Add a New Contact</h3>
-      <form onSubmit={submitAddition}>
-        <div>
-          name: <input value={newName} onChange={managePersonChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={manageNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+
+      <FormAddPerson 
+        submitAddition={ (e) => submitAddition(e)} 
+        managePersonChange={ (e) => managePersonChange(e)} 
+        manageNumberChange={ (e) => manageNumberChange(e)}/>
+  
       <h3>Numbers</h3>
-        <ul>{}
-            <Persons personsToShow={personsToShow}/>
-        </ul>
+
+      <Persons personsToShow={personsToShow}/>
+
     </div>
   )
 }

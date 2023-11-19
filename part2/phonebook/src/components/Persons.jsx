@@ -1,11 +1,7 @@
 
 /* eslint-disable react/prop-types */
-const Person = ({personsToShow}) =>(
-  personsToShow.map((p,i) =>
-  (
-    <li key={i}>{p.name}</li>
-    )
-  )
+const Persons = ({personsToShow}) =>(
+    <ul>{ personsToShow.map((p,i) => <li key={i}>{p.name}, {p.number}</li>)}</ul>
 )
 
-export default Person
+export default Persons
