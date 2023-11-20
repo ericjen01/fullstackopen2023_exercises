@@ -20,9 +20,7 @@ const App = () => {
 
   useEffect(()=>{
     const effectHook= () =>{
-      personsService
-      .getPersons()
-      .then(response=>{
+      personsService.getPersons().then(response=>{
         console.log(response)
         setPersons(response)
       })
@@ -40,9 +38,19 @@ const App = () => {
     }
     printSomething()
 
+    /*duplicateName 
+    ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
+    : setPersons(persons.concat(newPersonToAdd))*/
+    
     duplicateName 
     ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
-    : setPersons(persons.concat(newPersonToAdd))
+    :   personsService.createPerson(newPersonToAdd).then(serverResponse => {
+        setPersons(persons.concat(serverResponse))
+    })
+    
+    
+
+  
 
     setTimeout(() => { setMessage(null) }, 4000)
   }
