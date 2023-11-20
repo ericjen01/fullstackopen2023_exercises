@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 
 const FormAddPerson = ({submitAddition, managePersonChange, manageNumberChange}) => {
+  
   return (
     <div>
       <form onSubmit={submitAddition}>

@@ -21,7 +21,6 @@ const App = () => {
   useEffect(()=>{
     const effectHook= () =>{
       personsService.getPersons().then(response=>{
-        console.log(response)
         setPersons(response)
       })
     }
@@ -33,14 +32,6 @@ const App = () => {
 
     const newPersonToAdd = {name:newName, number:newNumber}
     const duplicateName = persons.find(p => p.name === newName)
-    const printSomething = () => {
-      console.log("persons: ", persons)
-    }
-    printSomething()
-
-    /*duplicateName 
-    ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
-    : setPersons(persons.concat(newPersonToAdd))*/
     
     duplicateName 
     ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
@@ -48,11 +39,25 @@ const App = () => {
         setPersons(persons.concat(serverResponse))
     })
     
-    
-
-  
-
     setTimeout(() => { setMessage(null) }, 4000)
+  }
+
+  const removePerson = (id) =>{
+
+    const name = (persons.filter(p => p.id === id)).name
+    const number = (persons.filter(p => p.id === id)).number
+    const message = `delete ${name} ${number}?`
+
+    if(window.confirm(message) === true){
+      personsService.removePerson(id).then(response =>{
+        console.log("removal status: ", response.status)
+        setPersons(persons.filter(p => p.id !== id))
+      })
+    }
+    else {
+      window.alert("aborted")
+    }
+
   }
   
   const managePersonChange = (e) => setNewName(e.target.value)
@@ -66,18 +71,18 @@ const App = () => {
 
       <Alert message={message}>test</Alert>
 
-      <Search manageSearchChange={(e) => manageSearchChange(e) }/>
+      <Search manageSearchChange={(e) => manageSearchChange(e)}/>
 
       <h3>Add a New Contact</h3>
 
       <FormAddPerson 
-        submitAddition={ (e) => submitAddition(e)} 
-        managePersonChange={ (e) => managePersonChange(e)} 
-        manageNumberChange={ (e) => manageNumberChange(e)}/>
+        submitAddition={ (e) => submitAddition(e) } 
+        managePersonChange={ (e) => managePersonChange(e) } 
+        manageNumberChange={ (e) => manageNumberChange(e) }/>
   
       <h3>Numbers</h3>
 
-      <Persons personsToShow={personsToShow}/>
+      <Persons personsToShow={personsToShow} removePerson={removePerson}/>
 
     </div>
   )

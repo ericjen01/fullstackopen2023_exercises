@@ -5,7 +5,7 @@ const baseUrl = 'http://localhost:3001/persons'
 const getPersons = () => {
     const respns = axios.get(baseUrl)
     return respns.then(response => {
-        console.log("data getting retrived from server...")
+        //console.log("data getting retrived from server...")
         return response.data
     })
 }
@@ -13,12 +13,18 @@ const getPersons = () => {
 const createPerson = (newInput) => {
     const respns = axios.post(baseUrl, newInput)
     return respns.then(response =>{        
-        console.log("new input getting posted to server...")
+        //console.log("new input getting posted to server...")
         return response.data
     })
+}
+
+const removePerson = (id) =>{
+    const respns = axios.delete(`${baseUrl}/${id}`)
+    return respns
 }
 
 export default { 
     getPersons, 
     createPerson, 
+    removePerson,
 }
