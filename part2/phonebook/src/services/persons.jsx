@@ -18,6 +18,14 @@ const createPerson = (newInput) => {
     })
 }
 
+const updatePerson = (id, newInput) => {
+    const respns = axios.put(`${baseUrl}/${id}`, newInput)
+    return respns.then(response =>{        
+        console.log("updating to server...")
+        return response.data
+    })
+}
+
 const removePerson = (id) =>{
     const respns = axios.delete(`${baseUrl}/${id}`)
     return respns
@@ -27,4 +35,5 @@ export default {
     getPersons, 
     createPerson, 
     removePerson,
+    updatePerson,
 }

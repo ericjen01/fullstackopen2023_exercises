@@ -27,18 +27,26 @@ const App = () => {
     effectHook()
   },[])
 
+
   const submitAddition = (e) =>{
     e.preventDefault();
 
     const newPersonToAdd = {name:newName, number:newNumber}
-    const duplicateName = persons.find(p => p.name === newName)
+    const duplicateInput = persons.find(p => p.name === newName)
+    const msg = `${String.fromCharCode(0x26A0)} "${newName}" already exists. update phone # to "${newNumber}" ?`
     
-    duplicateName 
-    ? setMessage(`${String.fromCharCode(0x26A0)} " ${newName} " is already added to phonebook`)
-    :   personsService.createPerson(newPersonToAdd).then(serverResponse => {
+    if(duplicateInput){
+      if(window.confirm(msg) === true){
+        personsService.updatePerson(duplicateInput.id, newPersonToAdd).then(acceptedPerson => {
+          //console.log("acceptedPerson: ", acceptedPerson)
+          setPersons(persons.map(p=>p.id === acceptedPerson.id? acceptedPerson : p))
+        })
+      }else{ setMessage("cancelled") }
+    }else{
+      personsService.createPerson(newPersonToAdd).then(serverResponse => {
         setPersons(persons.concat(serverResponse))
-    })
-    
+      })
+    }
     setTimeout(() => { setMessage(null) }, 4000)
   }
 
@@ -57,7 +65,6 @@ const App = () => {
     else {
       window.alert("aborted")
     }
-
   }
   
   const managePersonChange = (e) => setNewName(e.target.value)
