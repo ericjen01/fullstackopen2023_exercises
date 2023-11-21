@@ -15,6 +15,8 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
 
+  const timeout = () =>(setTimeout(() => { setMessage(null) }, 3000))
+
   const personsToShow = searchTerm.length > 0 
     ? persons.filter(p => p.name.search(new RegExp(searchTerm, 'ig')) >= 0 ) 
     : persons
@@ -42,7 +44,12 @@ const App = () => {
       .createPerson(newPersonToAdd)
       .then(serverResponse => {
         setPersons(persons.concat(serverResponse))
+        setMessage({
+          content: `'${newName}' has been added to phonebook`,
+          type: "notification"
+        })
       })
+      timeout()
       return
     }
 
@@ -51,6 +58,7 @@ const App = () => {
         content: `${warning} name or number can't be empty`, 
         type: "error"
       })
+      timeout()
       return
     }
 
@@ -59,6 +67,7 @@ const App = () => {
         content: `${warning} number can't be empty`, 
         type: "error"
       })
+      timeout()
       return
     }
 
@@ -69,6 +78,7 @@ const App = () => {
         content: "action cancelled", 
         type: "notification"
       })
+      timeout()
       return 
     }
 
@@ -81,11 +91,10 @@ const App = () => {
           content:`number updated for ${newName}`, 
           type:"notification"
         })
+        timeout()
         return
       })
     }
-
-    setTimeout(() => { setMessage(null) }, 3000)
   }
 
   const removePerson = (id) =>{
@@ -111,9 +120,10 @@ const App = () => {
           type: "error"
         })
       })
+      timeout()
     }
     setMessage({content: "aborted", type: "notification"}) 
-    
+
   }
   
   const managePersonChange = (e) => setNewName(e.target.value)
