@@ -1,8 +1,9 @@
-/* eslint-disable react/prop-types */
+import './index.css'
 import { useState, useEffect} from 'react'
+import { warning } from './components/Icons'
 import personsService from './services/persons'
 import Persons from './components/Persons'
-import Alert from './components/Alert'
+import Notification from './components/Notification'
 import Search from './components/Search'
 import FormAddPerson from './components/FormAddPerson'
 
@@ -11,7 +12,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
 
   const personsToShow = searchTerm.length > 0 
@@ -32,38 +33,84 @@ const App = () => {
     e.preventDefault();
 
     const newPersonToAdd = {name:newName, number:newNumber}
-    const duplicateInput = persons.find(p => p.name === newName)
-    const msg = `${String.fromCharCode(0x26A0)} "${newName}" already exists. update phone # to "${newNumber}" ?`
+    const duplicateInput = persons.find(p => p.name === newPersonToAdd.name)
+    const msg = `${warning} "${newName}" already exists. update phone # to "${newNumber}" ?`
     
-    if(duplicateInput){
-      if(window.confirm(msg) === true){
-        personsService.updatePerson(duplicateInput.id, newPersonToAdd).then(acceptedPerson => {
-          //console.log("acceptedPerson: ", acceptedPerson)
-          setPersons(persons.map(p=>p.id === acceptedPerson.id? acceptedPerson : p))
-        })
-      }else{ setMessage("cancelled") }
-    }else{
-      personsService.createPerson(newPersonToAdd).then(serverResponse => {
+    if(!duplicateInput && newName !== '' && newNumber !== ''){
+      personsService
+      .createPerson(newPersonToAdd)
+      .then(serverResponse => {
         setPersons(persons.concat(serverResponse))
       })
+      return
     }
-    setTimeout(() => { setMessage(null) }, 4000)
+
+    if(!duplicateInput && (newName === '' || newNumber === '')){ 
+      console.log(persons)
+      setMessage({content: `${warning} name or number can't be empty`, type: "error"})
+      return
+    }
+
+    if(duplicateInput && newNumber ===''){
+      setMessage({content: `${warning} number can't be empty`, type: "error"})
+      return
+    }
+
+    const okByUser = window.confirm(msg)
+
+    if(duplicateInput && okByUser === false){ 
+      setMessage({content: "action cancelled", type: "notification"})
+      return 
+    }
+
+    if(duplicateInput && okByUser === true && newNumber !==''){ 
+      personsService
+      .updatePerson(duplicateInput.id, newPersonToAdd)
+      .then(returnedPerson => {
+        setPersons(persons.map(p=>p.id === returnedPerson.id? returnedPerson : p))
+        setMessage({content:`number updated for ${newName}`, type:"notification"})
+        return
+      })
+    }
+
+/*
+    if(duplicateInput){
+      if(window.confirm(msg) === true){
+        personsService.updatePerson(duplicateInput.id, newPersonToAdd)
+        .then(returnedPErson => {
+        //console.log("acceptedPerson: ", acceptedPerson)
+        setPersons(persons.map(p=>p.id === returnedPErson.id? returnedPErson : p))
+        setMessage({content: `number updated for ${newName}`, type: "notification"})
+        })
+      } 
+      setMessage({content: "cancelled", type: "notification"}) 
+    }
+    else if(newName !== ""){
+      personsService.createPerson(newPersonToAdd)
+      .then(serverResponse => {
+      setPersons(persons.concat(serverResponse))
+      setMessage({content: `${newName} created`, type: "notification"})
+      })
+    }else{setMessage({content: `${warning} contact name cannot be empty`, type: "error"})}
+*/
+    setTimeout(() => { setMessage(null) }, 3000)
   }
 
-  const removePerson = (id) =>{
 
+  const removePerson = (id) =>{
     const name = (persons.filter(p => p.id === id)).name
     const number = (persons.filter(p => p.id === id)).number
     const message = `delete ${name} ${number}?`
 
     if(window.confirm(message) === true){
-      personsService.removePerson(id).then(response =>{
-        console.log("removal status: ", response.status)
+      personsService.removePerson(id).then(() =>{
+        //console.log("removal status: ", response.status)
         setPersons(persons.filter(p => p.id !== id))
+        setMessage({content: "person removed", type: "notification"}) 
       })
     }
     else {
-      window.alert("aborted")
+      setMessage({content: "aborted", type: "notification"}) 
     }
   }
   
@@ -76,7 +123,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Alert message={message}>test</Alert>
+      <Notification message={message}/>
 
       <Search manageSearchChange={(e) => manageSearchChange(e)}/>
 
