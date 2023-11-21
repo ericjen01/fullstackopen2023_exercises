@@ -21,13 +21,14 @@ const App = () => {
 
   useEffect(()=>{
     const effectHook= () =>{
-      personsService.getPersons().then(response=>{
+      personsService
+      .getPersons()
+      .then(response=>{
         setPersons(response)
       })
     }
     effectHook()
   },[])
-
 
   const submitAddition = (e) =>{
     e.preventDefault();
@@ -46,20 +47,28 @@ const App = () => {
     }
 
     if(!duplicateInput && (newName === '' || newNumber === '')){ 
-      console.log(persons)
-      setMessage({content: `${warning} name or number can't be empty`, type: "error"})
+      setMessage({
+        content: `${warning} name or number can't be empty`, 
+        type: "error"
+      })
       return
     }
 
     if(duplicateInput && newNumber ===''){
-      setMessage({content: `${warning} number can't be empty`, type: "error"})
+      setMessage({
+        content: `${warning} number can't be empty`, 
+        type: "error"
+      })
       return
     }
 
     const okByUser = window.confirm(msg)
 
     if(duplicateInput && okByUser === false){ 
-      setMessage({content: "action cancelled", type: "notification"})
+      setMessage({
+        content: "action cancelled", 
+        type: "notification"
+      })
       return 
     }
 
@@ -68,34 +77,16 @@ const App = () => {
       .updatePerson(duplicateInput.id, newPersonToAdd)
       .then(returnedPerson => {
         setPersons(persons.map(p=>p.id === returnedPerson.id? returnedPerson : p))
-        setMessage({content:`number updated for ${newName}`, type:"notification"})
+        setMessage({
+          content:`number updated for ${newName}`, 
+          type:"notification"
+        })
         return
       })
     }
 
-/*
-    if(duplicateInput){
-      if(window.confirm(msg) === true){
-        personsService.updatePerson(duplicateInput.id, newPersonToAdd)
-        .then(returnedPErson => {
-        //console.log("acceptedPerson: ", acceptedPerson)
-        setPersons(persons.map(p=>p.id === returnedPErson.id? returnedPErson : p))
-        setMessage({content: `number updated for ${newName}`, type: "notification"})
-        })
-      } 
-      setMessage({content: "cancelled", type: "notification"}) 
-    }
-    else if(newName !== ""){
-      personsService.createPerson(newPersonToAdd)
-      .then(serverResponse => {
-      setPersons(persons.concat(serverResponse))
-      setMessage({content: `${newName} created`, type: "notification"})
-      })
-    }else{setMessage({content: `${warning} contact name cannot be empty`, type: "error"})}
-*/
     setTimeout(() => { setMessage(null) }, 3000)
   }
-
 
   const removePerson = (id) =>{
     const name = (persons.filter(p => p.id === id)).name
@@ -103,21 +94,31 @@ const App = () => {
     const message = `delete ${name} ${number}?`
 
     if(window.confirm(message) === true){
-      personsService.removePerson(id).then(() =>{
+      personsService
+      .removePerson(id)
+      .then(() =>{
         //console.log("removal status: ", response.status)
         setPersons(persons.filter(p => p.id !== id))
-        setMessage({content: "person removed", type: "notification"}) 
+        setMessage({
+          content: "person removed", 
+          type: "notification"
+        }) 
+      })
+      .catch(err => {
+        console.log(err)
+        setMessage({
+          content: `${name} (${number}) has already been removed`, 
+          type: "error"
+        })
       })
     }
-    else {
-      setMessage({content: "aborted", type: "notification"}) 
-    }
+    setMessage({content: "aborted", type: "notification"}) 
+    
   }
   
   const managePersonChange = (e) => setNewName(e.target.value)
   const manageNumberChange = (e) => setNewNumber(e.target.value)
   const manageSearchChange = (e) => setSearchTerm(e.target.value)
-
 
   return (
     <div>
