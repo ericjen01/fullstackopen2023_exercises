@@ -1,8 +1,8 @@
 
 const Languages = ({languages}) => {
     
-    //console.log(Object.values(languages))
     const countryLanguages = Object.values(languages)
+        //console.log(Object.values(languages))
 
     return (
         <ul>

@@ -9,7 +9,7 @@ const Country = ({filteredCountry}) => {
     const countryArea = country.area
     const countryLanguages = country.languages
     const countryFlags = country.flags
-    console.log(filteredCountry)
+        //console.log(filteredCountry)
 
 return(
     <>
