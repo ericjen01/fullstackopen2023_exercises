@@ -8,7 +8,7 @@ const App = () =>{
 
   useEffect( () =>{
     const effectHook = () => getAll()
-    .then(returnedCountries =>{
+      .then(returnedCountries =>{
       setCountries(returnedCountries)
     })
     effectHook()

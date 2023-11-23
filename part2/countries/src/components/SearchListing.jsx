@@ -12,13 +12,10 @@ const SearchListing = ({countries}) => {
     const filteredCountries = countries.filter( 
         c => c.name.common.search(new RegExp(searchTerm, "ig")) >= 0) 
             //console.log(filteredCountries)
-            //console.log("filtered: ", filteredCountries.length)
 
     const handleClick = (e) => {
             setCounttryCCN3(e.target.value)
             setIsSelected(true)
-            //console.log(e.target.value)
-            //console.log("selected? ", isSelected)
     }
 
     const handleChange = (e) => {
@@ -28,9 +25,7 @@ const SearchListing = ({countries}) => {
       }
 
     const chosenCountry = countries.filter(c => c.ccn3 === countryCCN3)
-
     const listingLength = filteredCountries.length
-
     const hasInput  = searchTerm !== ''
     const isNoInput = !hasInput
     const isTooLong = hasInput && listingLength > 10
@@ -38,7 +33,6 @@ const SearchListing = ({countries}) => {
     const isTheOne  = hasInput && listingLength === 1
     const isChosen  = hasInput && isSelected && countryCCN3 
     const isInRange = hasInput && listingLength <= 10 && listingLength > 1 && !isSelected
-
 
     return (
         <>
